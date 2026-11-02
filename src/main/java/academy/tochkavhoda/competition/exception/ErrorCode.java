@@ -14,7 +14,14 @@ public enum ErrorCode {
     WEAK_PASSWORD("Пароль должен содержать хотя бы одну букву и одну цифру"),
     LOGIN_ALREADY_USED("Этот логин уже используется"),
     INVALID_LOGIN_OR_PASSWORD("Неверный логин или пароль"),
-    INVALID_TOKEN("Недействительный токен");
+    INVALID_TOKEN("Недействительный токен"),
+    NOT_PARTICIPANT("Эта операция доступна только участнику"),
+    EMPTY_APPLICATIONS("Список заявок не должен быть пустым"),
+    EMPTY_TITLE("Название заявки не должно быть пустым"),
+    EMPTY_DESCRIPTION("Описание заявки не должно быть пустым"),
+    INVALID_AMOUNT("Запрашиваемая сумма должна быть больше нуля"),
+    APPLICATION_NOT_FOUND("Заявка не найдена"),
+    NOT_APPLICATION_OWNER("Нельзя отменить чужую заявку");
 
     private final String message;
 

@@ -2,6 +2,7 @@ package academy.tochkavhoda.competition.database;
 
 import academy.tochkavhoda.competition.exception.ErrorCode;
 import academy.tochkavhoda.competition.exception.ServerException;
+import academy.tochkavhoda.competition.model.Application;
 import academy.tochkavhoda.competition.model.Expert;
 import academy.tochkavhoda.competition.model.Participant;
 import academy.tochkavhoda.competition.model.User;
@@ -16,7 +17,9 @@ public class Database {
     private int nextUserId = 1;
     private final Map<String, Participant> participants = new HashMap<>(); // login -> участник
     private final Map<String, Expert> experts = new HashMap<>();           // login -> эксперт
-    private final Map<String, User> sessionsUser = new HashMap<>();         // token -> пользователь
+    private final Map<String, User> sessionsUser = new HashMap<>();        // token -> пользователь
+    private final Map<Integer, Application> applications = new HashMap<>(); // id -> заявка
+    private int nextApplicationId = 1;
 
     private Database() {
     }
@@ -33,8 +36,12 @@ public class Database {
         experts.clear();
         sessionsUser.clear();
         usersById.clear();
+        applications.clear();
         nextUserId = 1;
+        nextApplicationId = 1;
     }
+
+    // ---------- пользователи ----------
 
     public void insertParticipant(Participant participant) throws ServerException {
         checkLoginFree(participant.getLogin());
@@ -56,9 +63,6 @@ public class Database {
         return user != null ? user : experts.get(login);
     }
 
-    // ДЗ: написать метод getUserById здесь, потом добавить его в addSession через id,
-    // чтобы оттуда передать его в метод через user
-
     public User getUserById(int userId) throws ServerException {
         User user = usersById.get(userId);
         if (user == null) {
@@ -67,6 +71,8 @@ public class Database {
         return user;
     }
 
+    // ---------- сессии ----------
+
     public void addSession(String token, User user) {
         // удаляем прежние сессии этого пользователя (если он входил и не выходил)
         sessionsUser.values().removeIf(u -> u.getId() == user.getId());
@@ -74,8 +80,8 @@ public class Database {
     }
 
     public void addSession(String token, int userId) throws ServerException {
-        User user = getUserById(userId);   // находим пользователя по id
-        addSession(token, user);           // и передаём его в метод выше
+        User user = getUserById(userId);
+        addSession(token, user);
     }
 
     public void logout(String token) throws ServerException {
@@ -91,6 +97,29 @@ public class Database {
             throw new ServerException(ErrorCode.INVALID_TOKEN);
         }
         return user;
+    }
+
+    // ---------- заявки ----------
+
+    /** Сохраняет заявку, присваивает ей id и возвращает его. */
+    public int insertApplication(Application application) {
+        application.setId(nextApplicationId++);
+        applications.put(application.getId(), application);
+        return application.getId();
+    }
+
+    public Application getApplicationById(int applicationId) throws ServerException {
+        Application application = applications.get(applicationId);
+        if (application == null) {
+            throw new ServerException(ErrorCode.APPLICATION_NOT_FOUND);
+        }
+        return application;
+    }
+
+    public void deleteApplication(int applicationId) throws ServerException {
+        if (applications.remove(applicationId) == null) {
+            throw new ServerException(ErrorCode.APPLICATION_NOT_FOUND);
+        }
     }
 
     private void checkLoginFree(String login) throws ServerException {
