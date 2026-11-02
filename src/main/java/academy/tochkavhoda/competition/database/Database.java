@@ -44,6 +44,7 @@ public class Database {
     }
 
     public void insertExpert(Expert expert) throws ServerException {
+        checkLoginFree(expert.getLogin());
         expert.setId(nextUserId++);
         experts.put(expert.getLogin(), expert);
         usersById.put(expert.getId(), expert);

@@ -24,7 +24,7 @@ public class UserService {
                 throw new ServerException(ErrorCode.INVALID_LOGIN_OR_PASSWORD);
             }
             String token = UUID.randomUUID().toString();
-            userDao.login(user, token);
+            userDao.login(user.getId(), token);
             return ServiceUtils.ok(new LoginDtoResponse(token));
         } catch (ServerException e) {
             return ServiceUtils.error(e);
