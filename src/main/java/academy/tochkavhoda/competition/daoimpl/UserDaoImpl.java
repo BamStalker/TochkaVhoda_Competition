@@ -14,8 +14,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void login(User user, String token) {
-        database.login(user, token);
+    public void login(int userId, String token) throws ServerException {
+        database.addSession(token, userId);
     }
 
     @Override

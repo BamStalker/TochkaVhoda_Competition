@@ -6,7 +6,7 @@ import academy.tochkavhoda.competition.model.User;
 public interface UserDao {
     User getByLogin(String login);
 
-    void login(User user, String token);
+    void login(int userId, String token) throws ServerException;
 
     void logout(String token) throws ServerException;
 

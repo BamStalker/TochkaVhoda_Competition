@@ -1,6 +1,7 @@
 package academy.tochkavhoda.competition.exception;
 
 public enum ErrorCode {
+    USER_NOT_FOUND("Пользователь не найден"),
     INVALID_JSON("Некорректный формат запроса"),
     EMPTY_FIRST_NAME("Имя не должно быть пустым"),
     EMPTY_LAST_NAME("Фамилия не должна быть пустой"),

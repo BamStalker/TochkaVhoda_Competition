@@ -1,10 +1,12 @@
 package academy.tochkavhoda.competition.model;
 
 public abstract class User {
+    private int id;
     private String firstName;
     private String lastName;
     private String login;
     private String password;
+
 
     public User(String firstName, String lastName, String login, String password) {
         this.firstName = firstName;
@@ -13,6 +15,8 @@ public abstract class User {
         this.password = password;
     }
 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
