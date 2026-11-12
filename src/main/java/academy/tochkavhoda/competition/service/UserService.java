@@ -7,6 +7,7 @@ import academy.tochkavhoda.competition.dto.response.EmptyDtoResponse;
 import academy.tochkavhoda.competition.dto.response.LoginDtoResponse;
 import academy.tochkavhoda.competition.exception.ErrorCode;
 import academy.tochkavhoda.competition.exception.ServerException;
+import academy.tochkavhoda.competition.model.Participant;
 import academy.tochkavhoda.competition.model.User;
 import academy.tochkavhoda.competition.server.ServerResponse;
 
@@ -37,6 +38,22 @@ public class UserService {
             return ServiceUtils.ok(new EmptyDtoResponse());
         } catch (ServerException e) {
             return ServiceUtils.error(e);
+        }
+    }
+
+    /**
+     * Находит по токену пользователя и проверяет, что это участник.
+     * Возвращает id участника. Вызывается слоем Server до обращения к бизнес-логике.
+     */
+    public ResultService<Integer> getParticipantId(String token) {
+        try {
+            User user = userDao.getUserByToken(token);
+            if (!(user instanceof Participant)) {
+                throw new ServerException(ErrorCode.NOT_PARTICIPANT);
+            }
+            return ResultService.success(user.getId());
+        } catch (ServerException e) {
+            return ResultService.failure(e);
         }
     }
 

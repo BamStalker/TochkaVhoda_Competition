@@ -1,7 +1,6 @@
 package academy.tochkavhoda.competition.server;
 
 import academy.tochkavhoda.competition.database.Database;
-import academy.tochkavhoda.competition.service.ApplicationService;
 import academy.tochkavhoda.competition.service.ExpertService;
 import academy.tochkavhoda.competition.service.ParticipantService;
 import academy.tochkavhoda.competition.service.UserService;
@@ -10,7 +9,7 @@ public class Server {
     private final ParticipantService participantService = new ParticipantService();
     private final ExpertService expertService = new ExpertService();
     private final UserService userService = new UserService();
-    private final ApplicationService applicationService = new ApplicationService();
+    private final ApplicationApi applicationApi = new ApplicationApi();
 
     /** Создание сервера начинает работу с пустой "базой данных". */
     public Server() {
@@ -34,10 +33,10 @@ public class Server {
     }
 
     public ServerResponse addApplications(String token, String requestJsonString) {
-        return applicationService.addApplications(token, requestJsonString);
+        return applicationApi.addApplications(token, requestJsonString);
     }
 
     public ServerResponse cancelApplication(String token, String requestJsonString) {
-        return applicationService.cancelApplication(token, requestJsonString);
+        return applicationApi.cancelApplication(token, requestJsonString);
     }
 }
