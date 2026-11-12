@@ -10,6 +10,7 @@ public class Server {
     private final ExpertService expertService = new ExpertService();
     private final UserService userService = new UserService();
     private final ApplicationApi applicationApi = new ApplicationApi();
+    private final ExpertApi expertApi = new ExpertApi();
 
     /** Создание сервера начинает работу с пустой "базой данных". */
     public Server() {
@@ -38,5 +39,21 @@ public class Server {
 
     public ServerResponse cancelApplication(String token, String requestJsonString) {
         return applicationApi.cancelApplication(token, requestJsonString);
+    }
+
+    public ServerResponse rateApplication(String token, String requestJsonString) {
+        return expertApi.rateApplication(token, requestJsonString);
+    }
+
+    public ServerResponse removeRating(String token, String requestJsonString) {
+        return expertApi.removeRating(token, requestJsonString);
+    }
+
+    public ServerResponse getApplications(String token, String requestJsonString) {
+        return expertApi.getApplications(token, requestJsonString);
+    }
+
+    public ServerResponse getRatedApplications(String token) {
+        return expertApi.getRatedApplications(token);
     }
 }

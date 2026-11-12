@@ -21,7 +21,12 @@ public enum ErrorCode {
     EMPTY_DESCRIPTION("Описание заявки не должно быть пустым"),
     INVALID_AMOUNT("Запрашиваемая сумма должна быть больше нуля"),
     APPLICATION_NOT_FOUND("Заявка не найдена"),
-    NOT_APPLICATION_OWNER("Нельзя отменить чужую заявку");
+    NOT_APPLICATION_OWNER("Нельзя отменить чужую заявку"),
+    NOT_EXPERT("Эта операция доступна только эксперту"),
+    INVALID_RATING("Оценка должна быть от 1 до 5"),
+    DIRECTION_MISMATCH("Вы не являетесь экспертом по направлениям этой заявки"),
+    DIRECTION_NOT_ALLOWED("Вы не являетесь экспертом по одному из указанных направлений"),
+    RATING_NOT_FOUND("Оценка не найдена");
 
     private final String message;
 

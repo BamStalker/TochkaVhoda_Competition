@@ -5,6 +5,7 @@ public class Participant extends User {
 
     public Participant(String firstName, String lastName, String firmName, String login, String password) {
         super(firstName, lastName, login, password);
+        this.firmName = firmName;
     }
 
     public String getFirmName() { return firmName; }

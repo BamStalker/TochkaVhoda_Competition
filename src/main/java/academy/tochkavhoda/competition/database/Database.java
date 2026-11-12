@@ -5,9 +5,13 @@ import academy.tochkavhoda.competition.exception.ServerException;
 import academy.tochkavhoda.competition.model.Application;
 import academy.tochkavhoda.competition.model.Expert;
 import academy.tochkavhoda.competition.model.Participant;
+import academy.tochkavhoda.competition.model.Rating;
 import academy.tochkavhoda.competition.model.User;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Database {
@@ -20,6 +24,7 @@ public class Database {
     private final Map<String, User> sessionsUser = new HashMap<>();        // token -> пользователь
     private final Map<Integer, Application> applications = new HashMap<>(); // id -> заявка
     private int nextApplicationId = 1;
+    private final Map<Integer, Map<Integer, Rating>> ratings = new HashMap<>(); // id заявки -> (id эксперта -> оценка)
 
     private Database() {
     }
@@ -37,6 +42,7 @@ public class Database {
         sessionsUser.clear();
         usersById.clear();
         applications.clear();
+        ratings.clear();
         nextUserId = 1;
         nextApplicationId = 1;
     }
@@ -120,6 +126,45 @@ public class Database {
         if (applications.remove(applicationId) == null) {
             throw new ServerException(ErrorCode.APPLICATION_NOT_FOUND);
         }
+    }
+
+    /** Все заявки, упорядоченные по id. */
+    public List<Application> getAllApplications() {
+        List<Application> result = new ArrayList<>(applications.values());
+        result.sort(Comparator.comparingInt(Application::getId));
+        return result;
+    }
+
+    // ---------- оценки ----------
+
+    /** Сохраняет оценку. Если этот эксперт уже оценивал заявку, старая оценка заменяется. */
+    public void saveRating(Rating rating) {
+        ratings.computeIfAbsent(rating.getApplication().getId(), k -> new HashMap<>())
+                .put(rating.getExpert().getId(), rating);
+    }
+
+    public void deleteRating(int applicationId, int expertId) throws ServerException {
+        Map<Integer, Rating> byExpert = ratings.get(applicationId);
+        if (byExpert == null || byExpert.remove(expertId) == null) {
+            throw new ServerException(ErrorCode.RATING_NOT_FOUND);
+        }
+    }
+
+    public void deleteRatingsByApplication(int applicationId) {
+        ratings.remove(applicationId);
+    }
+
+    /** Оценки эксперта, упорядоченные по id заявки. */
+    public List<Rating> getRatingsByExpert(int expertId) {
+        List<Rating> result = new ArrayList<>();
+        for (Map<Integer, Rating> byExpert : ratings.values()) {
+            Rating rating = byExpert.get(expertId);
+            if (rating != null) {
+                result.add(rating);
+            }
+        }
+        result.sort(Comparator.comparingInt(r -> r.getApplication().getId()));
+        return result;
     }
 
     private void checkLoginFree(String login) throws ServerException {

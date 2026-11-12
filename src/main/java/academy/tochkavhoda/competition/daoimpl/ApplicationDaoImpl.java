@@ -5,6 +5,8 @@ import academy.tochkavhoda.competition.database.Database;
 import academy.tochkavhoda.competition.exception.ServerException;
 import academy.tochkavhoda.competition.model.Application;
 
+import java.util.List;
+
 public class ApplicationDaoImpl implements ApplicationDao {
     private final Database database = Database.getInstance();
 
@@ -16,6 +18,11 @@ public class ApplicationDaoImpl implements ApplicationDao {
     @Override
     public Application getById(int applicationId) throws ServerException {
         return database.getApplicationById(applicationId);
+    }
+
+    @Override
+    public List<Application> getAll() {
+        return database.getAllApplications();
     }
 
     @Override

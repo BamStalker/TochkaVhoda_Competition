@@ -7,6 +7,7 @@ import academy.tochkavhoda.competition.dto.response.EmptyDtoResponse;
 import academy.tochkavhoda.competition.dto.response.LoginDtoResponse;
 import academy.tochkavhoda.competition.exception.ErrorCode;
 import academy.tochkavhoda.competition.exception.ServerException;
+import academy.tochkavhoda.competition.model.Expert;
 import academy.tochkavhoda.competition.model.Participant;
 import academy.tochkavhoda.competition.model.User;
 import academy.tochkavhoda.competition.server.ServerResponse;
@@ -50,6 +51,19 @@ public class UserService {
             User user = userDao.getUserByToken(token);
             if (!(user instanceof Participant)) {
                 throw new ServerException(ErrorCode.NOT_PARTICIPANT);
+            }
+            return ResultService.success(user.getId());
+        } catch (ServerException e) {
+            return ResultService.failure(e);
+        }
+    }
+
+    /** Находит по токену пользователя и проверяет, что это эксперт. Возвращает id эксперта. */
+    public ResultService<Integer> getExpertId(String token) {
+        try {
+            User user = userDao.getUserByToken(token);
+            if (!(user instanceof Expert)) {
+                throw new ServerException(ErrorCode.NOT_EXPERT);
             }
             return ResultService.success(user.getId());
         } catch (ServerException e) {
